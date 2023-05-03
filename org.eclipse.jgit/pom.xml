@@ -23,13 +23,22 @@
     <version>6.5.1-SNAPSHOT</version>
   </parent>
 
+  <groupId>org.jetbrains.intellij.deps</groupId>
   <artifactId>org.eclipse.jgit</artifactId>
+  <version>6.5.0.202303070854-r-custom-4</version>
   <name>JGit - Core</name>
 
   <description>
-    Repository access and algorithms
+    Custom version of JGit Core with some improvements for autonomous usage (ignore
+      global gitconfigs) and better error reporting
   </description>
 
+    <distributionManagement>
+        <repository>
+            <id>space-intellij-dependencies</id>
+            <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+        </repository>
+    </distributionManagement>
   <properties>
     <translate-qualifier/>
     <source-bundle-manifest>${project.build.directory}/META-INF/SOURCE-MANIFEST.MF</source-bundle-manifest>
@@ -115,48 +124,6 @@
             <manifestFile>${bundle-manifest}</manifestFile>
           </archive>
         </configuration>
-      </plugin>
-
-      <plugin>
-          <groupId>com.github.siom79.japicmp</groupId>
-          <artifactId>japicmp-maven-plugin</artifactId>
-          <version>${japicmp-version}</version>
-          <configuration>
-              <oldVersion>
-                  <dependency>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${jgit-last-release-version}</version>
-                  </dependency>
-              </oldVersion>
-              <newVersion>
-                  <file>
-                      <path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
-                  </file>
-              </newVersion>
-              <parameter>
-                  <onlyModified>true</onlyModified>
-                  <includes>
-                      <include>org.eclipse.jgit.*</include>
-                  </includes>
-                  <accessModifier>public</accessModifier>
-                  <breakBuildOnModifications>false</breakBuildOnModifications>
-                  <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
-                  <onlyBinaryIncompatible>false</onlyBinaryIncompatible>
-                  <includeSynthetic>false</includeSynthetic>
-                  <ignoreMissingClasses>true</ignoreMissingClasses>
-                  <skipPomModules>true</skipPomModules>
-              </parameter>
-              <skip>false</skip>
-          </configuration>
-          <executions>
-            <execution>
-             <phase>verify</phase>
-             <goals>
-               <goal>cmp</goal>
-             </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
 
