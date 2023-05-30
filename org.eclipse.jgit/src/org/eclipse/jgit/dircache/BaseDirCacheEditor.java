@@ -24,7 +24,7 @@ import org.eclipse.jgit.errors.DirCacheNameConflictException;
  * The different update strategies extend this class to provide their own unique
  * services to applications.
  */
-abstract class BaseDirCacheEditor {
+public abstract class BaseDirCacheEditor {
 	/** The cache instance this editor updates during {@link #finish()}. */
 	protected DirCache cache;
 

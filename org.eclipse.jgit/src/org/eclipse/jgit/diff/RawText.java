@@ -125,6 +125,14 @@ public class RawText extends Sequence {
 	}
 
 	/**
+	 * The file content for this sequence
+	 * @return see above
+	 */
+	public byte[] getContent() {
+		return content;
+	}
+
+	/**
 	 * Write a specific line to the output stream, without its trailing LF.
 	 * <p>
 	 * The specified line is copied as-is, with no character encoding

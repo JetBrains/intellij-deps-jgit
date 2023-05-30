@@ -28,15 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.eclipse.jgit.annotations.NonNull;
 import org.eclipse.jgit.annotations.Nullable;
@@ -419,6 +411,15 @@ public class ResolveMerger extends ThreeWayMerger {
 		}
 
 		/**
+		 * set of files to be deleted at the end of the operation
+		 * @return see above
+		 */
+		public Set<String> getToBeDeleted() {
+			return Collections.unmodifiableSet(toBeDeleted.keySet());
+		}
+
+
+		/**
 		 * Remembers the given file to be deleted.
 		 * <p>
 		 * Note the actual deletion is only done in
@@ -758,6 +759,18 @@ public class ResolveMerger extends ThreeWayMerger {
 	 * Files modified during this operation. Note this list is only updated after a successful write.
 	 */
 	protected List<String> modifiedFiles = new ArrayList<>();
+
+	/**
+	 * If the operation has nothing to do for a file but check it out at the
+	 * end of the operation, it can be added here.
+	 */
+	protected Map<String, DirCacheEntry> toBeCheckedOut = new HashMap<>();
+
+	/**
+	 * Files in this list will be deleted from the local copy at the end of
+	 * the operation.
+	 */
+	protected Set<String> toBeDeleted = new HashSet<>();
 
 	/**
 	 * Paths that could not be merged by this merger because of an unsolvable
@@ -1720,7 +1733,15 @@ public class ResolveMerger extends ThreeWayMerger {
 	 *         for this path.
 	 */
 	public Map<String, DirCacheEntry> getToBeCheckedOut() {
-		return workTreeUpdater.getToBeCheckedOut();
+		return Collections.unmodifiableMap(toBeCheckedOut);
+	}
+
+	/**
+	 *  To be deleted
+	 * @return files to be deleted
+	 */
+	public Set<String> getToBeDeleted() {
+		return toBeDeleted;
 	}
 
 	/**
@@ -1862,6 +1883,12 @@ public class ResolveMerger extends ThreeWayMerger {
 		} finally {
 			if(modifiedFiles.isEmpty()) {
 				modifiedFiles = workTreeUpdater.getModifiedFiles();
+			}
+			if (toBeCheckedOut.isEmpty()) {
+				toBeCheckedOut = workTreeUpdater.getToBeCheckedOut();
+			}
+			if (toBeDeleted.isEmpty()) {
+				toBeDeleted = workTreeUpdater.getToBeDeleted();
 			}
 			workTreeUpdater.close();
 			workTreeUpdater = null;

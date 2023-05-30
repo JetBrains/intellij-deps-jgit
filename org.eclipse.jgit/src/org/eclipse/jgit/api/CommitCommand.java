@@ -148,7 +148,7 @@ public class CommitCommand extends GitCommand<RevCommit> {
 	 * @param repo
 	 *            the {@link org.eclipse.jgit.lib.Repository}
 	 */
-	protected CommitCommand(Repository repo) {
+    public CommitCommand(Repository repo) {
 		super(repo);
 		this.credentialsProvider = CredentialsProvider.getDefault();
 	}

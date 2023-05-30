@@ -162,6 +162,7 @@ public class JschConfigSessionFactory extends SshSessionFactory {
 			if (c instanceof UnknownHostException) {
 				throw new TransportException(uri,
 						JSchText.get().unknownHost,
+						TransportException.Status.CANNOT_RESOLVE_REPO,
 						je);
 			}
 			if (c instanceof ConnectException) {

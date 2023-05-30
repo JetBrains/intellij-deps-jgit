@@ -61,6 +61,9 @@ import org.eclipse.jgit.util.NB;
 import org.eclipse.jgit.util.TemporaryBuffer;
 import org.eclipse.jgit.util.io.SilentFileInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Support for the Git dircache (aka index file).
  * <p>
@@ -75,6 +78,8 @@ import org.eclipse.jgit.util.io.SilentFileInputStream;
  * resolutions to be easily performed.
  */
 public class DirCache {
+	private final static Logger LOG = LoggerFactory
+			.getLogger(DirCache.class);
 	private static final byte[] SIG_DIRC = { 'D', 'I', 'R', 'C' };
 
 	private static final int EXT_TREE = 0x54524545 /* 'TREE' */;
@@ -99,7 +104,15 @@ public class DirCache {
 		return cmp(aPath, aLen, b.path, b.path.length);
 	}
 
-	static int cmp(final byte[] aPath, final int aLen, final byte[] bPath,
+	/**
+	 * for internal usage
+	 * @param aPath path a
+	 * @param aLen len a
+	 * @param bPath path b
+	 * @param bLen len b
+	 * @return difference
+	 */
+	public static int cmp(final byte[] aPath, final int aLen, final byte[] bPath,
 			final int bLen) {
 		for (int cPos = 0; cPos < aLen && cPos < bLen; cPos++) {
 			final int cmp = (aPath[cPos] & 0xff) - (bPath[cPos] & 0xff);
@@ -495,8 +508,15 @@ public class DirCache {
 
 		final MutableInteger infoAt = new MutableInteger();
 		for (int i = 0; i < entryCnt; i++) {
-			sortedEntries[i] = new DirCacheEntry(infos, infoAt, in, md, smudge,
-					version, i == 0 ? null : sortedEntries[i - 1]);
+			try {
+				sortedEntries[i] = new DirCacheEntry(infos, infoAt, in, md, smudge,
+						version, i == 0 ? null : sortedEntries[i - 1]);
+			}
+			catch (CorruptObjectException e) {
+				LOG.error("Invalid entry", e);
+				i--;
+				entryCnt--;
+			}
 		}
 
 		// After the file entries are index extensions, and then a footer.
@@ -852,7 +872,14 @@ public class DirCache {
 		return nextIdx;
 	}
 
-	int nextEntry(byte[] p, int pLen, int nextIdx) {
+	/**
+	 * same as {@link DirCache#nextEntry(int)}
+	 * @param p bytes
+	 * @param pLen plen
+	 * @param nextIdx nextIdx
+	 * @return nextIdx
+	 */
+	public int nextEntry(byte[] p, int pLen, int nextIdx) {
 		while (nextIdx < entryCnt) {
 			final DirCacheEntry next = sortedEntries[nextIdx];
 			if (!DirCacheTree.peq(p, next.path, pLen))

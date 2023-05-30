@@ -43,15 +43,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpCookie;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.SocketException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.InvalidPathException;
 import java.security.GeneralSecurityException;
@@ -683,7 +675,8 @@ public class TransportHttp extends HttpTransport implements WalkTransport,
 							|| !authMethod.authorize(currentUri,
 									credentialsProvider)) {
 						throw new TransportException(uri,
-								JGitText.get().notAuthorized);
+								JGitText.get().notAuthorized,
+								TransportException.Status.NOT_AUTHORIZED);
 					}
 					authAttempts++;
 					continue;
@@ -691,7 +684,7 @@ public class TransportHttp extends HttpTransport implements WalkTransport,
 				case HttpConnection.HTTP_FORBIDDEN:
 					throw new TransportException(uri, MessageFormat.format(
 							JGitText.get().serviceNotPermitted, baseUrl,
-							service));
+							service), TransportException.Status.NOT_PERMITTED);
 
 				case HttpConnection.HTTP_MOVED_PERM:
 				case HttpConnection.HTTP_MOVED_TEMP:
@@ -716,7 +709,9 @@ public class TransportHttp extends HttpTransport implements WalkTransport,
 					break;
 				default:
 					String err = status + " " + conn.getResponseMessage(); //$NON-NLS-1$
-					throw new TransportException(uri, err);
+					TransportException.Status trExStatus =
+							status == HttpURLConnection.HTTP_BAD_GATEWAY ? TransportException.Status.BAD_GATEWAY : null;
+					throw new TransportException(uri, err, trExStatus);
 				}
 			} catch (NotSupportedException | TransportException e) {
 				throw e;

@@ -27,7 +27,7 @@ public class NoRemoteRepositoryException extends TransportException {
 	 *            message
 	 */
 	public NoRemoteRepositoryException(URIish uri, String s) {
-		super(uri, s);
+		super(uri, s, Status.CANNOT_RESOLVE_REPO);
 	}
 
 	/**
@@ -42,6 +42,6 @@ public class NoRemoteRepositoryException extends TransportException {
 	 * @since 5.13.1
 	 */
 	public NoRemoteRepositoryException(URIish uri, String s, Throwable cause) {
-		super(uri, s, cause);
+		super(uri, s, Status.CANNOT_RESOLVE_REPO, cause);
 	}
 }

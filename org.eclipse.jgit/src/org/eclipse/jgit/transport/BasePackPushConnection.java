@@ -152,12 +152,14 @@ public abstract class BasePackPushConnection extends BasePackConnection implemen
 		TransportException te;
 		try {
 			transport.openFetch().close();
-			te = new TransportException(uri, JGitText.get().pushNotPermitted);
+			te = new TransportException(uri, JGitText.get().pushNotPermitted,
+					TransportException.Status.NOT_PERMITTED);
 		} catch (NoRemoteRepositoryException e) {
 			// Fetch concluded the repository doesn't exist.
 			te = e;
 		} catch (NotSupportedException | TransportException e) {
-			te = new TransportException(uri, JGitText.get().pushNotPermitted, e);
+			te = new TransportException(uri, JGitText.get().pushNotPermitted,
+					TransportException.Status.NOT_PERMITTED, e);
 		}
 		te.addSuppressed(cause);
 		return te;

@@ -158,11 +158,13 @@ public class FileRepository extends Repository {
 	public FileRepository(BaseRepositoryBuilder options) throws IOException {
 		super(options);
 		StoredConfig userConfig = null;
-		try {
-			userConfig = SystemReader.getInstance().getUserConfig();
-		} catch (ConfigInvalidException e) {
-			LOG.error(e.getMessage(), e);
-			throw new IOException(e.getMessage(), e);
+		if (!options.isAutonomous()) {
+			try {
+				userConfig = SystemReader.getInstance().getUserConfig();
+			} catch (ConfigInvalidException e) {
+				LOG.error(e.getMessage(), e);
+				throw new IOException(e.getMessage(), e);
+			}
 		}
 		repoConfig = new FileBasedConfig(userConfig, getFS().resolve(
 				getDirectory(), Constants.CONFIG),
