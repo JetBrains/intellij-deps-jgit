@@ -50,6 +50,7 @@ import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
  *      >Git documentation about Reset</a>
  */
 public class ResetCommand extends GitCommand<Ref> {
+	private DirCacheCheckout dirCacheCheckout;
 
 	/**
 	 * Kind of reset
@@ -277,6 +278,13 @@ public class ResetCommand extends GitCommand<Ref> {
 	}
 
 	/**
+	 * @return {@link org.eclipse.jgit.dircache.DirCacheCheckout} if working directory was changed
+	 */
+	public DirCacheCheckout getDirCacheCheckout() {
+		return dirCacheCheckout;
+	}
+
+	/**
 	 * Whether to disable reflog
 	 *
 	 * @param disable
@@ -406,14 +414,14 @@ public class ResetCommand extends GitCommand<Ref> {
 			GitAPIException {
 		DirCache dc = repo.lockDirCache();
 		try {
-			DirCacheCheckout checkout = new DirCacheCheckout(repo, dc,
+			dirCacheCheckout = new DirCacheCheckout(repo, dc,
 					commitTree);
-			checkout.setFailOnConflict(false);
-			checkout.setProgressMonitor(monitor);
+			dirCacheCheckout.setFailOnConflict(false);
+			dirCacheCheckout.setProgressMonitor(monitor);
 			try {
-				checkout.checkout();
+				dirCacheCheckout.checkout();
 			} catch (org.eclipse.jgit.errors.CheckoutConflictException cce) {
-				throw new CheckoutConflictException(checkout.getConflicts(),
+				throw new CheckoutConflictException(dirCacheCheckout.getConflicts(),
 						cce);
 			}
 		} finally {

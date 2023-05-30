@@ -162,7 +162,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
 	 * @param repo
 	 *            the {@link org.eclipse.jgit.lib.Repository}
 	 */
-	protected CheckoutCommand(Repository repo) {
+    public CheckoutCommand(Repository repo) {
 		super(repo);
 		this.paths = new LinkedList<>();
 	}

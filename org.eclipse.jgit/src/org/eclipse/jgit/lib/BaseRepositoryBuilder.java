@@ -125,6 +125,32 @@ public class BaseRepositoryBuilder<B extends BaseRepositoryBuilder, R extends Re
 	private Config config;
 
 	/**
+	 * Indicates whether this repository is autonomous (i.e. doesn't use any global config such as ".gitconfig", "/etc/gitconfig", etc)
+	 * By default it's false, which is a normal behaviour
+	 */
+	private boolean isAutonomous = false;
+
+	/**
+	 * whether this repository is autonomous (i.e. doesn't use any global config such as ".gitconfig", "/etc/gitconfig", etc)
+	 * @return <b>true</b> if user repo is autonomous and takes its settings only from ./.git/config. <br/>
+	 * 		<b>false</b> if global configs are taken into account
+	 */
+	public boolean isAutonomous() {
+		return isAutonomous;
+	}
+
+	/**
+	 * Sets whether this repository is autonomous (i.e. doesn't use any global config such as ".gitconfig", "/etc/gitconfig", etc)
+	 * <b>False means default behaviour (respecting all parent configs) </b>
+	 * @param value see above
+	 * @return {@code this} (for chaining calls).
+	 */
+	public B setAutonomous(boolean value) {
+		this.isAutonomous = value;
+		return self();
+	}
+
+	/**
 	 * Set the file system abstraction needed by this repository.
 	 *
 	 * @param fs

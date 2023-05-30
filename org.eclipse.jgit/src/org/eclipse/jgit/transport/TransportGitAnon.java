@@ -129,7 +129,7 @@ class TransportGitAnon extends TcpTransport implements PackTransport {
 				// ignore a failure during close, we're already failing
 			}
 			if (c instanceof UnknownHostException)
-				throw new TransportException(uri, JGitText.get().unknownHost);
+				throw new TransportException(uri, JGitText.get().unknownHost, TransportException.Status.CANNOT_RESOLVE_REPO);
 			if (c instanceof ConnectException)
 				throw new TransportException(uri, c.getMessage());
 			throw new TransportException(uri, c.getMessage(), c);
