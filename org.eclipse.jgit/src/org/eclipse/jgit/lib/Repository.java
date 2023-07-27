@@ -129,6 +129,8 @@ public abstract class Repository implements AutoCloseable {
 
 	private final String initialBranch;
 
+	private final boolean isAutonomous;
+
 	/**
 	 * Initialize a new repository instance.
 	 *
@@ -141,6 +143,7 @@ public abstract class Repository implements AutoCloseable {
 		workTree = options.getWorkTree();
 		indexFile = options.getIndexFile();
 		initialBranch = options.getInitialBranch();
+		isAutonomous = options.isAutonomous();
 	}
 
 	/**
@@ -2109,5 +2112,15 @@ public abstract class Repository implements AutoCloseable {
 	 */
 	public void autoGC(ProgressMonitor monitor) {
 		// default does nothing
+	}
+
+	/**
+	 * indicates whether the repository is autonomous (doesn't respect global
+	 * configuration files or not)
+	 *
+	 * @return true if the repository is autonomous, false otherwise
+	 */
+	public boolean isAutonomous() {
+		return isAutonomous;
 	}
 }
