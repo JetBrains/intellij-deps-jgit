@@ -158,9 +158,9 @@ public class FileRepository extends Repository {
 	public FileRepository(BaseRepositoryBuilder options) throws IOException {
 		super(options);
 		StoredConfig userConfig = null;
-		if (!options.isAutonomous()) {
+		if (!isAutonomous()) {
 			try {
-				userConfig = SystemReader.getInstance().getUserConfig();
+				userConfig = getUserConfig();
 			} catch (ConfigInvalidException e) {
 				LOG.error(e.getMessage(), e);
 				throw new IOException(e.getMessage(), e);
@@ -349,7 +349,7 @@ public class FileRepository extends Repository {
 	@Override
 	public FileBasedConfig getConfig() {
 		try {
-			SystemReader.getInstance().getUserConfig();
+			getUserConfig(); // that will reload user config and parent configs
 			if (repoConfig.isOutdated()) {
 				loadRepoConfig();
 			}
@@ -357,6 +357,14 @@ public class FileRepository extends Repository {
 			throw new RuntimeException(e);
 		}
 		return repoConfig;
+	}
+
+	@Nullable
+	private StoredConfig getUserConfig() throws ConfigInvalidException, IOException {
+		if (isAutonomous()) {
+			return null;
+		}
+		return SystemReader.getInstance().getUserConfig();
 	}
 
 	/** {@inheritDoc} */
