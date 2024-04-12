@@ -1,3 +1,5 @@
+[![official JetBrains project](http://jb.gg/badges/official.svg)](https://github.com/JetBrains#jetbrains-open-source)
+
 # Java Git
 
 An implementation of the Git version control system in pure Java.
