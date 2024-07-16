@@ -25,7 +25,7 @@
 
   <groupId>org.jetbrains.intellij.deps</groupId>
   <artifactId>org.eclipse.jgit</artifactId>
-  <version>6.5.0.202303070854-r-custom-4</version>
+  <version>6.6.1.202309021850-r-jb</version>
   <name>JGit - Core</name>
 
   <description>
@@ -36,7 +36,7 @@
     <distributionManagement>
         <repository>
             <id>space-intellij-dependencies</id>
-            <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+            <url>${publicationRepositoryUrl}</url>
         </repository>
     </distributionManagement>
   <properties>
