@@ -25,7 +25,7 @@
 
   <groupId>org.jetbrains.intellij.deps</groupId>
   <artifactId>org.eclipse.jgit</artifactId>
-  <version>6.6.1.202309021850-r-jb</version>
+  <version>6.6.1.202309021850-r-jb-${maven.build.timestamp}</version>
   <name>JGit - Core</name>
 
   <description>
@@ -59,7 +59,6 @@
 
   <build>
     <sourceDirectory>src/</sourceDirectory>
-      <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
     <resources>
       <resource>
         <directory>.</directory>
