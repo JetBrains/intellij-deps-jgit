@@ -59,7 +59,7 @@
 
   <build>
     <sourceDirectory>src/</sourceDirectory>
-
+      <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
     <resources>
       <resource>
         <directory>.</directory>
